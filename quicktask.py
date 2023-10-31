@@ -32,17 +32,20 @@ def load_config():
         vault = os.path.expanduser('~/obsidian')
         newly_created_config = True
 
+    print(f'Using inbox folder: {vault}')
+
     if newly_created_config:
-        print(f'Using inbox folder: {vault}')
         print(f'Change this by editing {config_file}')
 
     return vault
 
 
 def create_markdown(vault, title, contents):
+    
     # create file vault
     file_name = f'{title}.md'
     file_path = os.path.join(vault, file_name)
+
 
     # if file already exists, ask user if want to replace
     # if replace delete, if not exit
@@ -79,7 +82,11 @@ def main():
 
     vault = load_config()
 
-    capture(vault)
+    try:
+        capture(vault)
+    except KeyboardInterrupt:
+        print()
+        pass
 
 if __name__ == '__main__':
     main()
