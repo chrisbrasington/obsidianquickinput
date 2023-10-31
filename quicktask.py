@@ -2,6 +2,10 @@ import os
 import configparser
 
 def load_config():
+    """
+    Load config file from ~/.config/quicktask/config.ini
+    """
+
     config_file = os.path.expanduser('~/.config/quicktask/config.ini')
     vault = ''
     newly_created_config = False
@@ -39,13 +43,13 @@ def load_config():
 
     return vault
 
-
 def create_markdown(vault, title, contents):
-    
+    """
+    Create markdown file in vault with title and contents
+    """
     # create file vault
     file_name = f'{title}.md'
     file_path = os.path.join(vault, file_name)
-
 
     # if file already exists, ask user if want to replace
     # if replace delete, if not exit
@@ -60,28 +64,39 @@ def create_markdown(vault, title, contents):
 
     # create file
     with open(file_path, 'w') as f:
-        f.write(f'{contents}\n')
-        # f.write(f'\n')
-        # f.write(f'---\n')
-        # f.write(f'Created by quicktask\n')
+        for line in contents:
+            f.write(f'{line}\n')
 
     print(f'Created file: {file_path}')
 
     # print out full file contents
-    with open(file_path, 'r') as f:
-        print(f.read())
-
+    # with open(file_path, 'r') as f:
+        # print(f.read())
 
 def capture(vault):
+    """
+    Capture user input and create markdown file
+    """
     title = input("Title: ")
-    contents = input("Note: ")
+
+    contents = []
+    print("Press enter (empty line) to save:")
+    while True:
+        line = input()
+        if line == '':
+            break
+        contents.append(line)
 
     create_markdown(vault, title, contents)
 
 def main():
-
+    """
+    Main function
+    """
+    # load vault path from config file
     vault = load_config()
 
+    # capture user input
     try:
         capture(vault)
     except KeyboardInterrupt:
