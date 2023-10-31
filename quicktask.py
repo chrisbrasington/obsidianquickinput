@@ -14,21 +14,23 @@ def load_config():
         if not os.path.exists(os.path.expanduser('~/.config/quicktask')):
             os.makedirs(os.path.expanduser('~/.config/quicktask'))
 
+        vault = os.path.expanduser('~/obsidian')
+
+        # for each folder in vault, find folder containing name 'inbox'
+        for root, dirs, files in os.walk(vault):
+            for name in dirs:
+                # if name lower contains inbox
+                if 'inbox' in name.lower():
+                    vault = os.path.join(root, name)
+                    break
+
         # create config file
         config = configparser.ConfigParser()
-        config['DEFAULT'] = {'obsidian_vault': os.path.expanduser('~/obsidian')}
+        config['DEFAULT'] = {'obsidian_vault': vault}
         with open(config_file, 'w') as configfile:
             config.write(configfile)
         vault = os.path.expanduser('~/obsidian')
         newly_created_config = True
-
-    # for each folder in vault, find folder containing name 'inbox'
-    for root, dirs, files in os.walk(vault):
-        for name in dirs:
-            # if name lower contains inbox
-            if 'inbox' in name.lower():
-                vault = os.path.join(root, name)
-                break
 
     if newly_created_config:
         print(f'Using inbox folder: {vault}')
